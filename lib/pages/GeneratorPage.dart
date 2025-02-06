@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:namer_app/services/translateText.dart';
 import 'package:provider/provider.dart';
 
 import 'package:namer_app/main.dart';
@@ -14,7 +15,25 @@ class GeneratorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
     var isFavoritted = appState.isFavoritted();
+
     final theme = Theme.of(context);
+
+    void translate() async {
+      bool isTranslated =
+          appState.currentWordPairTranslated != null && !appState.canTranslate;
+
+      if (isTranslated) {
+        appState.updateTranslatedText(null);
+        return;
+      }
+
+      final translation = await TranslateText.translate(
+        appState.currentWordPair,
+        method: appState.translateMethod,
+      );
+
+      appState.updateTranslatedText(translation);
+    }
 
     return Center(
       child: Column(
@@ -27,7 +46,10 @@ class GeneratorPage extends StatelessWidget {
           ),
           SizedBox(height: 10.0),
           //
-          BigCard(currentPair: appState.currentWordPair),
+          BigCard(
+            currentPair:
+                appState.currentWordPairTranslated ?? appState.currentWordPair,
+          ),
           SizedBox(height: 10.0),
           //
           Row(
@@ -44,7 +66,10 @@ class GeneratorPage extends StatelessWidget {
 
               // Next button
               ElevatedButton(
-                onPressed: () => appState.getNext(),
+                onPressed: () {
+                  appState.getNext();
+                  translate();
+                },
                 child: Text("Next"),
               ),
 
@@ -61,6 +86,37 @@ class GeneratorPage extends StatelessWidget {
                 },
                 color: theme.colorScheme.secondary,
                 icon: Icon(Icons.copy),
+              ),
+
+              // Translate button
+              GestureDetector(
+                onLongPress: () {
+                  var methodNames = {
+                    TranslateMethod.same: "Same",
+                    TranslateMethod.correct: "Correct",
+                  };
+
+                  appState.alternateTranslateMethods();
+
+                  ShowSnackBar.show(
+                    "Changed translate method to ${methodNames[appState.translateMethod]}",
+                    context,
+                  );
+
+                  if (appState.canTranslate) {
+                    translate();
+                  }
+                },
+                child: IconButton(
+                  onPressed: () {
+                    appState.setCanTranslate(!appState.canTranslate);
+                    translate();
+                  },
+                  color: appState.canTranslate
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.secondary,
+                  icon: Icon(Icons.translate),
+                ),
               ),
             ],
           ),
