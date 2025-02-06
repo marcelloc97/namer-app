@@ -26,7 +26,7 @@ samples, guidance on mobile development, and a full API reference.
 ## Next features
 
 - Better ui design, possibly with animations :)
-- Copy favoritted and generated word pairs to clipboard and use anywhere
+- Copy favoritted and generated word pairs to clipboard and use anywhere ✅
 - Translate the words and let be coppied to the clipboard too
 
 ## Thanks

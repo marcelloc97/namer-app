@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:namer_app/main.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +41,11 @@ class FavoritesPage extends StatelessWidget {
             semanticsLabel:
                 "${favorites[index].first} ${favorites[index].second}",
           ),
+          onTap: () {
+            Clipboard.setData(
+              ClipboardData(text: favorites[index].asLowerCase),
+            );
+          },
         ),
       ),
     );
