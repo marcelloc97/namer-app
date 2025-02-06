@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/main.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
+import 'package:namer_app/main.dart';
+
+import 'package:namer_app/utils/showSnackBar.dart';
 
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({super.key});
@@ -40,6 +44,13 @@ class FavoritesPage extends StatelessWidget {
             semanticsLabel:
                 "${favorites[index].first} ${favorites[index].second}",
           ),
+          onTap: () {
+            ShowSnackBar.show("Copied to clipboard", context);
+
+            Clipboard.setData(
+              ClipboardData(text: favorites[index].asLowerCase),
+            );
+          },
         ),
       ),
     );

@@ -1,10 +1,11 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:english_words/english_words.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:namer_app/pages/HomePage.dart';
+
+import 'package:namer_app/services/translateText.dart';
 
 void main() {
   runApp(App());
@@ -31,8 +32,13 @@ class App extends StatelessWidget {
 
 class AppState extends ChangeNotifier {
   WordPair currentWordPair = WordPair.random();
-  List<WordPair> favoriteWords = [];
 
+  // Translation vars
+  WordPair? currentWordPairTranslated;
+  TranslateMethod translateMethod = TranslateMethod.correct;
+  bool canTranslate = false;
+
+  List<WordPair> favoriteWords = [];
   final List<WordPair> history = [];
 
   GlobalKey? historyListKey;
@@ -67,6 +73,11 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateTranslatedText(WordPair? wordPair) {
+    currentWordPairTranslated = wordPair;
+    notifyListeners();
+  }
+
   void toggleFavorite([WordPair? wordPair]) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -93,5 +104,34 @@ class AppState extends ChangeNotifier {
 
   bool isFavoritted() {
     return favoriteWords.contains(currentWordPair);
+  }
+
+  void setCanTranslate(bool value) {
+    canTranslate = value;
+    notifyListeners();
+  }
+
+  void alternateTranslateMethods() {
+    translateMethod = translateMethod == TranslateMethod.correct
+        ? TranslateMethod.same
+        : TranslateMethod.correct;
+
+    notifyListeners();
+  }
+
+  void translate() async {
+    bool isTranslated = currentWordPairTranslated != null && !canTranslate;
+
+    if (isTranslated) {
+      updateTranslatedText(null);
+      return;
+    }
+
+    final translation = await TranslateText.translate(
+      currentWordPair,
+      method: translateMethod,
+    );
+
+    updateTranslatedText(translation);
   }
 }

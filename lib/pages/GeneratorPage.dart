@@ -23,21 +23,30 @@ class GeneratorPage extends StatelessWidget {
           ),
           SizedBox(height: 10.0),
           //
-          BigCard(currentPair: appState.currentWordPair),
+          BigCard(
+            currentPair:
+                appState.currentWordPairTranslated ?? appState.currentWordPair,
+          ),
           SizedBox(height: 10.0),
           //
           Row(
             mainAxisSize: MainAxisSize.min,
+            spacing: 10.0,
             children: [
+              // Like button
               ElevatedButton.icon(
                 onPressed: () => appState.toggleFavorite(),
                 icon:
                     Icon(isFavoritted ? Icons.favorite : Icons.favorite_border),
                 label: Text(isFavoritted ? "Dislike" : "Like"),
               ),
-              SizedBox(width: 10.0),
+
+              // Next button
               ElevatedButton(
-                onPressed: () => appState.getNext(),
+                onPressed: () {
+                  appState.getNext();
+                  appState.translate();
+                },
                 child: Text("Next"),
               ),
             ],

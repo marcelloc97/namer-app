@@ -26,8 +26,9 @@ samples, guidance on mobile development, and a full API reference.
 ## Next features
 
 - Better ui design, possibly with animations :)
-- Copy favoritted and generated word pairs to clipboard and use anywhere
-- Translate the words and let be coppied to the clipboard too
+- Copy favoritted and generated word pairs to clipboard and use anywhere ✅
+- Translate the words and let be copied to the clipboard too ✅
+- Revert a word pair from history to main card
 
 ## Thanks
 
