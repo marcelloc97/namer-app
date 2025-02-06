@@ -118,4 +118,20 @@ class AppState extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void translate() async {
+    bool isTranslated = currentWordPairTranslated != null && !canTranslate;
+
+    if (isTranslated) {
+      updateTranslatedText(null);
+      return;
+    }
+
+    final translation = await TranslateText.translate(
+      currentWordPair,
+      method: translateMethod,
+    );
+
+    updateTranslatedText(translation);
+  }
 }

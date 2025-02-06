@@ -32,8 +32,8 @@ class TranslateText {
         }
 
         return WordPair(
-          translations[0].text,
-          translations[1].text,
+          translations[0].text.toLowerCase(),
+          translations[1].text.toLowerCase(),
         );
       }
 
@@ -44,8 +44,8 @@ class TranslateText {
       );
 
       return WordPair(
-        translation.text.split(" ").first,
-        translation.text.split(" ").last,
+        translation.text.split(" ").first.toLowerCase(),
+        translation.text.split(" ").last.toLowerCase(),
       );
     } catch (error) {
       print(error);
