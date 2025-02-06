@@ -1,4 +1,4 @@
-package com.example.first_app_getting_started
+package com.marcelloc97.namer_app
 
 import io.flutter.embedding.android.FlutterActivity
 
