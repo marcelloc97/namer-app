@@ -7,6 +7,8 @@ import 'package:namer_app/main.dart';
 import 'package:namer_app/widgets/BigCard.dart';
 import 'package:namer_app/widgets/HistoryListView.dart';
 
+import 'package:namer_app/utils/showSnackBar.dart';
+
 class GeneratorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,8 @@ class GeneratorPage extends StatelessWidget {
               // Copy button
               IconButton(
                 onPressed: () {
+                  ShowSnackBar.show("Copied to clipboard", context);
+
                   Clipboard.setData(
                     ClipboardData(
                       text: appState.currentWordPair.asLowerCase,
