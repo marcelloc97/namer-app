@@ -27,85 +27,40 @@ class BigCard extends StatelessWidget {
       fontSize: 42.0,
     );
 
-    return Card(
-      color: theme.colorScheme.primary,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: AnimatedSize(
-          duration: const Duration(milliseconds: 200),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MergeSemantics(
-                child: Wrap(
-                  children: [
-                    Text(
-                      currentPair.first,
-                      style: style.copyWith(fontWeight: FontWeight.w200),
-                    ),
-                    Text(
-                      currentPair.second,
-                      style: style.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ],
+    return GestureDetector(
+      onTap: () {
+        var text = appState.currentWordPairTranslated != null
+            ? appState.currentWordPairTranslated!.asLowerCase
+            : appState.currentWordPair.asLowerCase;
+
+        Clipboard.setData(ClipboardData(text: text));
+        ShowSnackBar.show("Copied to clipboard", context);
+      },
+      child: Card(
+        color: theme.colorScheme.primary,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                MergeSemantics(
+                  child: Wrap(
+                    children: [
+                      Text(
+                        currentPair.first,
+                        style: style.copyWith(fontWeight: FontWeight.w200),
+                      ),
+                      Text(
+                        currentPair.second,
+                        style: style.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(width: 16.0),
-              Column(
-                spacing: 10.0,
-                children: [
-                  // Copy button
-                  IconButton(
-                    onPressed: () {
-                      var text = appState.currentWordPairTranslated != null
-                          ? appState.currentWordPairTranslated!.asLowerCase
-                          : appState.currentWordPair.asLowerCase;
-
-                      ShowSnackBar.show("Copied to clipboard", context);
-
-                      Clipboard.setData(
-                        ClipboardData(
-                          text: text,
-                        ),
-                      );
-                    },
-                    color: theme.colorScheme.surfaceDim,
-                    icon: Icon(Icons.copy),
-                  ),
-
-                  // Translate button
-                  GestureDetector(
-                    onLongPress: () {
-                      var methodNames = {
-                        TranslateMethod.same: "Same",
-                        TranslateMethod.correct: "Correct",
-                      };
-
-                      appState.alternateTranslateMethods();
-
-                      ShowSnackBar.show(
-                        "Changed translate method to ${methodNames[appState.translateMethod]}",
-                        context,
-                      );
-
-                      if (appState.canTranslate) {
-                        appState.translate();
-                      }
-                    },
-                    child: IconButton(
-                      onPressed: () {
-                        appState.setCanTranslate(!appState.canTranslate);
-                        appState.translate();
-                      },
-                      color: appState.canTranslate
-                          ? theme.colorScheme.inversePrimary
-                          : theme.colorScheme.surfaceDim,
-                      icon: Icon(Icons.translate),
-                    ),
-                  ),
-                ],
-              )
-            ],
+              ],
+            ),
           ),
         ),
       ),

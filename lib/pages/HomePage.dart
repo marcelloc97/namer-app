@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:namer_app/main.dart';
 
 import 'package:namer_app/pages/GeneratorPage.dart';
 import 'package:namer_app/pages/FavoritesPage.dart';
+
+import 'package:namer_app/services/translateText.dart';
+
+import 'package:namer_app/utils/showSnackBar.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,6 +25,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
     var colorScheme = Theme.of(context).colorScheme;
 
     Widget? page = pagesMap[currentPageIndex];
@@ -30,7 +38,50 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
+    Color getFabIconColor() {
+      if (appState.canTranslate) {
+        return colorScheme.onPrimary;
+      } else {
+        return colorScheme.secondary;
+      }
+    }
+
+    Color getFabColor() {
+      if (appState.canTranslate) {
+        return colorScheme.primary;
+      } else {
+        return colorScheme.onPrimary;
+      }
+    }
+
     return Scaffold(
+      floatingActionButton: GestureDetector(
+        onLongPress: () {
+          var methodNames = {
+            TranslateMethod.same: "Same",
+            TranslateMethod.correct: "Correct",
+          };
+
+          appState.alternateTranslateMethods();
+
+          ShowSnackBar.show(
+            "Changed translate method to ${methodNames[appState.translateMethod]}",
+            context,
+          );
+
+          if (appState.canTranslate) {
+            appState.translate();
+          }
+        },
+        child: FloatingActionButton(
+          onPressed: () {
+            appState.setCanTranslate(!appState.canTranslate);
+            appState.translate();
+          },
+          backgroundColor: getFabColor(),
+          child: Icon(Icons.translate, color: getFabIconColor()),
+        ),
+      ),
       body: LayoutBuilder(builder: (context, constraints) {
         // Mobile Layout
         if (constraints.maxWidth < 480) {
