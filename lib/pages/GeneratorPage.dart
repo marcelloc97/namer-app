@@ -1,3 +1,4 @@
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,14 @@ class GeneratorPage extends StatelessWidget {
     var appState = context.watch<AppState>();
     var isFavoritted = appState.isFavoritted();
 
+    WordPair getCurrentPair() {
+      if (appState.canTranslate && appState.currentWordPairTranslated != null) {
+        return appState.currentWordPairTranslated!;
+      } else {
+        return appState.currentWordPair;
+      }
+    }
+
     return Center(
       child: Column(
         // centraliza verticalmente
@@ -24,8 +33,7 @@ class GeneratorPage extends StatelessWidget {
           SizedBox(height: 10.0),
           //
           BigCard(
-            currentPair:
-                appState.currentWordPairTranslated ?? appState.currentWordPair,
+            currentPair: getCurrentPair(),
           ),
           SizedBox(height: 10.0),
           //
