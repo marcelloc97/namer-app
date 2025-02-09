@@ -2,7 +2,7 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:namer_app/main.dart';
+import 'package:namer_app/core/AppState.dart';
 
 import 'package:namer_app/widgets/BigCard.dart';
 import 'package:namer_app/widgets/HistoryListView.dart';

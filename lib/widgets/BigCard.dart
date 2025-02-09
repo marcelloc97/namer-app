@@ -3,11 +3,9 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'package:namer_app/main.dart';
+import 'package:namer_app/core/AppState.dart';
 
 import 'package:namer_app/utils/showSnackBar.dart';
-
-import 'package:namer_app/services/translateText.dart';
 
 class BigCard extends StatelessWidget {
   const BigCard({

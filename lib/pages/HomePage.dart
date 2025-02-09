@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:namer_app/main.dart';
+import 'package:namer_app/core/Types.dart';
+import 'package:namer_app/core/AppState.dart';
 
 import 'package:namer_app/pages/GeneratorPage.dart';
 import 'package:namer_app/pages/FavoritesPage.dart';
+import 'package:namer_app/pages/InformationsPage.dart';
 
 import 'package:namer_app/services/translateText.dart';
 
@@ -18,9 +20,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var currentPageIndex = 0;
 
-  final Map<int, Widget> pagesMap = {
-    0: GeneratorPage(),
-    1: FavoritesPage(),
+  final PageMap pagesMap = {
+    0: {
+      "widget": GeneratorPage(),
+      "label": "Home",
+      "icon": Icons.home,
+    },
+    1: {
+      "widget": FavoritesPage(),
+      "label": "Favorites",
+      "icon": Icons.favorite,
+    },
+    2: {
+      "widget": InformationsPage(),
+      "label": "Informations",
+      "icon": Icons.info,
+    },
   };
 
   @override
@@ -28,13 +43,14 @@ class _HomePageState extends State<HomePage> {
     var appState = context.watch<AppState>();
     var colorScheme = Theme.of(context).colorScheme;
 
-    Widget? page = pagesMap[currentPageIndex];
+    Map<String, dynamic> currentPage =
+        pagesMap[currentPageIndex] as Map<String, dynamic>;
 
     var mainArea = ColoredBox(
       color: colorScheme.primaryContainer,
       child: AnimatedSwitcher(
         duration: Duration(milliseconds: 200),
-        child: page,
+        child: currentPage["widget"],
       ),
     );
 
@@ -89,24 +105,21 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(child: mainArea),
               BottomNavigationBar(
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: "Home",
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.favorite),
-                    label: "Favorites",
-                  ),
-                ],
+                items: pagesMap.entries
+                    .map(
+                      (entry) => BottomNavigationBarItem(
+                        icon: Icon(entry.value["icon"] as IconData),
+                        label: entry.value["label"] as String,
+                      ),
+                    )
+                    .toList(),
+
+                ///
                 currentIndex: currentPageIndex,
                 onTap: (value) => setState(() {
                   currentPageIndex = value;
                 }),
               ),
-              // SafeArea(
-              //   child:
-              // ),
             ],
           );
         }
@@ -117,16 +130,16 @@ class _HomePageState extends State<HomePage> {
               SafeArea(
                 child: NavigationRail(
                   extended: constraints.maxWidth >= 600,
-                  destinations: [
-                    NavigationRailDestination(
-                      icon: Icon(Icons.home),
-                      label: Text("Home"),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.favorite),
-                      label: Text("Favorites"),
-                    ),
-                  ],
+                  destinations: pagesMap.entries
+                      .map(
+                        (entry) => NavigationRailDestination(
+                          icon: Icon(entry.value["icon"] as IconData),
+                          label: Text(entry.value["label"] as String),
+                        ),
+                      )
+                      .toList(),
+
+                  ///
                   selectedIndex: currentPageIndex,
                   onDestinationSelected: (value) {
                     setState(() {
