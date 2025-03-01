@@ -26,10 +26,13 @@ samples, guidance on mobile development, and a full API reference.
 ## Next features
 
 - Better ui design, possibly with animations :)
-- Refactor the app code to be more clean and concise.
-- Copy favoritted and generated word pairs to clipboard and use anywhere ✅
-- Translate the words and let be copied to the clipboard too ✅
+- Refactor the app code to be more clean and concise
+- Add a search bar at the top of the list in favorites page
+- ~~Copy favoritted and generated word pairs to clipboard and use anywhere~~ ✅
+- ~~Translate the words and let be copied to the clipboard too~~ ✅
 - Revert a word pair from history to main card
+- Settings page for selecting the app language and translation language
+- Options to translation in GeneratorPage
 
 ## Thanks
 

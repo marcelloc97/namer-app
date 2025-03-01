@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:namer_app/services/translateText.dart';
 
 class AppState extends ChangeNotifier {
+  bool loading = false;
+
   WordPair currentWordPair = WordPair.random();
 
   // Translation vars
@@ -19,6 +21,11 @@ class AppState extends ChangeNotifier {
 
   AppState() {
     _loadFavorites();
+  }
+
+  void setLoadingState(bool value) {
+    loading = value;
+    notifyListeners();
   }
 
   void _loadFavorites() async {

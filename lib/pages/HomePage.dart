@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 
 import 'package:namer_app/core/Types.dart';
@@ -42,6 +43,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
     var colorScheme = Theme.of(context).colorScheme;
+    var mediaQuery = MediaQuery.of(context).size;
 
     Map<String, dynamic> currentPage =
         pagesMap[currentPageIndex] as Map<String, dynamic>;
@@ -70,33 +72,58 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
-    return Scaffold(
-      floatingActionButton: GestureDetector(
-        onLongPress: () {
-          var methodNames = {
-            TranslateMethod.same: "Same",
-            TranslateMethod.correct: "Correct",
-          };
+    Widget getFabWidget() {
+      if (!appState.loading) {
+        if (currentPageIndex == 0) {
+          return GestureDetector(
+            onLongPress: () {
+              var methodNames = {
+                TranslateMethod.same: "Same",
+                TranslateMethod.correct: "Correct",
+              };
 
-          appState.alternateTranslateMethods();
+              appState.alternateTranslateMethods();
 
-          ShowSnackBar.show(
-            "Changed translate method to ${methodNames[appState.translateMethod]}",
-            context,
+              ShowSnackBar.show(
+                "Changed translate method to ${methodNames[appState.translateMethod]}",
+                context,
+              );
+
+              if (appState.canTranslate) {
+                appState.translate();
+              }
+            },
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: mediaQuery.width < 480 ? 64.0 : 0.0,
+              ),
+
+              ///
+              child: FloatingActionButton(
+                onPressed: () {
+                  appState.setCanTranslate(!appState.canTranslate);
+                  appState.translate();
+                },
+                backgroundColor: getFabColor(),
+                child: Icon(Icons.translate, color: getFabIconColor()),
+              ),
+            ),
           );
+        } else {
+          return Container();
+        }
+      } else {
+        return LoadingIndicator(
+          indicatorType: Indicator.ballPulse,
+          colors: [colorScheme.primary],
+        );
+      }
+    }
 
-          if (appState.canTranslate) {
-            appState.translate();
-          }
-        },
-        child: FloatingActionButton(
-          onPressed: () {
-            appState.setCanTranslate(!appState.canTranslate);
-            appState.translate();
-          },
-          backgroundColor: getFabColor(),
-          child: Icon(Icons.translate, color: getFabIconColor()),
-        ),
+    return Scaffold(
+      floatingActionButton: AnimatedSwitcher(
+        duration: Duration(milliseconds: 300),
+        child: getFabWidget(),
       ),
       body: LayoutBuilder(builder: (context, constraints) {
         // Mobile Layout

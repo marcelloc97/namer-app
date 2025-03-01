@@ -46,7 +46,7 @@ class FavoritesPage extends StatelessWidget {
         itemCount: favorites.length,
         itemBuilder: (context, index) => ListTile(
           leading: IconButton(
-            icon: Icon(Icons.delete_outline, semanticLabel: 'Delete'),
+            icon: Icon(Icons.delete, semanticLabel: 'Delete'),
             color: theme.colorScheme.error,
             onPressed: () => appState.removeFavorite(favorites[index]),
           ),
@@ -60,8 +60,9 @@ class FavoritesPage extends StatelessWidget {
               Spacer(flex: 1),
               IconButton(
                 onPressed: () async {
-                  translatedFavorites[index] =
-                      await appState.translateFavorite(favorites[index]);
+                  print("pressed ${favorites[index].asLowerCase}");
+                  // translatedFavorites[index] =
+                  //     await appState.translateFavorite(favorites[index]);
                 },
                 color: theme.colorScheme.secondary,
                 icon: Icon(Icons.translate),
